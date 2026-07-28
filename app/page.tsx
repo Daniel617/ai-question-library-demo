@@ -4,41 +4,26 @@ import { useState } from "react";
 
 const prompts = [
   "给初二 3 班出一份一次函数的分层作业，40 分钟完成",
-  "找近三年本地中考的几何压轴题，难度适中",
-  "根据本周易错点，给我一套 15 题的巩固练习",
+  "把本周易错点做成 15 题巩固练习",
+  "找本地近三年几何压轴题，难度适中",
 ];
 
-const questionSets = [
-  {
-    tone: "本地热题",
-    title: "厦门市 2026 初三一模 · 数学精选",
-    meta: "18 题 · 45 分钟 · 中等偏上",
-    note: "本周 1,284 位老师选用",
-    color: "coral",
-    symbol: "厦",
-  },
-  {
-    tone: "名校精选",
-    title: "双十中学 · 函数与几何融合训练",
-    meta: "12 题 · 35 分钟 · 提优",
-    note: "命题逻辑清晰，适合拔高",
-    color: "violet",
-    symbol: "双",
-  },
-  {
-    tone: "持续更新",
-    title: "近 7 天新增的本地好题",
-    meta: "326 题 · 覆盖 8 个核心考点",
-    note: "含 23 道新近考试原题",
-    color: "yellow",
-    symbol: "新",
-  },
+const latest = [
+  ["厦门市 2026 初三一模 · 数学", "今天 09:20 入库", "18 题 · 中等偏上", "厦"],
+  ["双十中学 · 函数与几何融合训练", "今天 08:46 更新", "12 题 · 提优", "双"],
 ];
 
-const classTopics = [
-  ["一次函数图象", "84%", "掌握扎实", "good"],
-  ["反比例函数应用", "61%", "建议巩固", "warm"],
-  ["全等三角形证明", "42%", "重点突破", "alert"],
+const questions = [
+  ["一次函数图象与性质", "中考真题", "今天", "本地高频"],
+  ["全等三角形证明", "名校期中", "今天", "推荐给初二 3 班"],
+  ["反比例函数应用", "AI 纠错补充", "昨天", "班级薄弱点"],
+  ["二次根式混合运算", "校本资源", "昨天", "12 位老师复用"],
+];
+
+const papers = [
+  ["2026 厦门市初三第一次质量检测 · 数学", "今日 09:20", "近 3 年本地试卷自动补全 · 已拆 28 题"],
+  ["双十中学 2026 春季期中 · 数学", "今日 08:46", "刚完成解析校验 · 已拆 21 题"],
+  ["湖里区初二期末统测 · 数学", "昨天 18:12", "同步新增 16 题，覆盖 6 个考点"],
 ];
 
 export default function Home() {
@@ -49,91 +34,56 @@ export default function Home() {
 
   const runAi = (value?: string) => {
     const current = value || query;
-    if (!current.trim()) {
-      setNotice("说说这次想布置什么，我们会优先从本地精品题中为你匹配。");
-      return;
-    }
+    if (!current.trim()) return setNotice("说说你的教学需求，AI 会优先匹配现成好题，再补足缺失内容。");
     setQuery(current);
-    setNotice("AI 正在从 28,426 道本地优质题中组合你的专属题单…");
+    setNotice("AI 正在检索本地真题、名校资源与班级数据，预计 18 秒交付可用结果…");
   };
 
-  const toggleSave = (title: string) => {
-    setSaved((items) =>
-      items.includes(title) ? items.filter((item) => item !== title) : [...items, title],
-    );
-  };
+  const save = (name: string) => setSaved((items) => items.includes(name) ? items.filter((item) => item !== name) : [...items, name]);
 
-  return (
-    <main className="app-shell">
-      <nav className="topbar">
-        <a className="brand" href="#top" aria-label="题库首页">
-          <span className="brand-mark">题</span>
-          <span>题库</span><i>AI</i>
-        </a>
-        <div className="nav-links">
-          {["发现", "题目", "题单", "我的资源"].map((item) => (
-            <button key={item} onClick={() => setActiveNav(item)} className={activeNav === item ? "selected" : ""}>{item}</button>
-          ))}
-        </div>
-        <div className="top-actions">
-          <button className="icon-button" aria-label="通知">⌁<b></b></button>
-          <button className="avatar" aria-label="我的账户">林</button>
-        </div>
-      </nav>
+  return <main className="app-shell">
+    <nav className="topbar">
+      <button className="brand" onClick={() => setActiveNav("发现")} aria-label="题库首页"><span className="brand-mark">题</span><span>题库</span><i>AI</i></button>
+      <div className="nav-links">{["发现", "题目", "试卷", "我的资源"].map((item) => <button key={item} onClick={() => setActiveNav(item)} className={activeNav === item ? "selected" : ""}>{item}</button>)}</div>
+      <div className="top-actions"><button className="icon-button" aria-label="通知">⌁<b></b></button><button className="avatar" aria-label="我的账户">林</button></div>
+    </nav>
 
-      <section className="hero" id="top">
-        <div className="hero-copy">
-          <p className="eyebrow"><span></span> 你的本地 AI 题库</p>
-          <h1>好题不必找很久，<br /><em>一句话</em>就能开始。</h1>
-          <p className="hero-sub">懂本地、懂教学、也懂你的班级。每一次出题，都从经过真实教学验证的好题开始。</p>
-        </div>
-        <div className="hero-ornament" aria-hidden="true">
-          <div className="orbit orbit-a"></div><div className="orbit orbit-b"></div>
-          <div className="floating-card card-one"><small>本地真题</small><strong>1,286</strong><span>本周新增</span></div>
-          <div className="floating-card card-two"><span className="spark">✦</span><strong>AI</strong><small>优先匹配现成好题</small></div>
-          <div className="floating-card card-three"><span>优质资源</span><b>97.8%</b></div>
-        </div>
-      </section>
-
-      <section className="ask-panel" aria-label="AI 出题助手">
-        <div className="ask-heading"><span className="ai-dot">✦</span><div><b>今天想让 AI 帮你做什么？</b><small>描述教学需求，题目、题单、改编和布置一次完成</small></div></div>
-        <div className="prompt-box">
-          <textarea value={query} onChange={(e) => setQuery(e.target.value)} placeholder="例如：给初二 3 班出一份一次函数的分层作业，40 分钟完成" aria-label="描述教学需求" />
-          <button className="submit-prompt" onClick={() => runAi()} aria-label="开始生成">↑</button>
-        </div>
-        <div className="suggestions"><span>试试这样问</span>{prompts.map((prompt) => <button key={prompt} onClick={() => runAi(prompt)}>{prompt}</button>)}</div>
-        {notice && <div className="ai-notice" role="status"><span>✦</span>{notice}</div>}
-      </section>
-
-      <section className="discovery-section">
-        <div className="section-heading"><div><p className="eyebrow">正在发生</p><h2>本地老师都在用的好题</h2></div><button className="text-link">查看全部 <span>→</span></button></div>
-        <div className="resource-grid">
-          {questionSets.map((set) => <article className={`resource-card ${set.color}`} key={set.title}>
-            <div className="card-visual"><span className="visual-label">{set.tone}</span><div className="visual-letter">{set.symbol}</div><div className="visual-lines"><i></i><i></i><i></i></div></div>
-            <div className="resource-content"><div><span className="resource-type">精选题单</span><h3>{set.title}</h3><p>{set.meta}</p></div><div className="resource-bottom"><span className="resource-note">✦ {set.note}</span><button aria-label={`收藏 ${set.title}`} onClick={() => toggleSave(set.title)} className={saved.includes(set.title) ? "saved" : ""}>{saved.includes(set.title) ? "♥" : "♡"}</button></div></div>
-          </article>)}
-        </div>
-      </section>
-
-      <section className="insight-layout">
-        <article className="class-insight">
-          <div className="section-heading compact"><div><p className="eyebrow">为你的班级</p><h2>初二 3 班 · 本周学习脉搏</h2></div><button className="round-more">•••</button></div>
-          <div className="class-summary"><div className="progress-ring"><div><b>76</b><small>学习指数</small></div></div><p>整体状态比上周 <strong>提升 8%</strong><br /><span>AI 发现 1 个值得优先处理的薄弱点</span></p><button>查看班级洞察 →</button></div>
-          <div className="topic-list">{classTopics.map(([topic, pct, label, type]) => <div className="topic" key={topic}><div className="topic-name"><b>{topic}</b><span className={type}>{label}</span></div><div className="topic-bar"><i className={type} style={{ width: pct }}></i></div><strong>{pct}</strong></div>)}</div>
-        </article>
-        <aside className="personal-card">
-          <div className="personal-top"><div><p className="eyebrow">你的题库资产</p><h2>越用越懂你的<br />专属题库</h2></div><span className="archive-icon">⌘</span></div>
-          <div className="asset-stats"><div><b>2,846</b><span>已沉淀题目</span></div><div><b>62</b><span>优质题单</span></div><div><b>18</b><span>常用标签</span></div></div>
-          <p className="personal-note"><span>✦</span> 你的 127 道优质题已被学校老师复用 832 次</p>
-          <button>进入我的资源库 <span>→</span></button>
-        </aside>
-      </section>
-
-      <section className="trust-strip">
-        <div><span className="trust-icon">⌁</span><p><b>每一道题，都有自己的成长轨迹</b><small>来自哪里、谁在使用、是否有效，题库帮你持续沉淀。</small></p></div>
-        <div className="trust-metrics"><span><b>28,426</b> 本地优质题</span><span><b>1,964</b> 所学校在用</span><span><b>96.7%</b> 老师直接采用</span></div>
-      </section>
-      <footer>题库 AI · 让每一次教学准备，都成为更好的开始</footer>
-    </main>
-  );
+    {activeNav === "发现" && <Discovery query={query} setQuery={setQuery} runAi={runAi} notice={notice} saved={saved} save={save} />}
+    {activeNav === "题目" && <Questions runAi={runAi} />}
+    {activeNav === "试卷" && <Papers save={save} saved={saved} />}
+    {activeNav === "我的资源" && <Resources />}
+  </main>;
 }
+
+function Discovery({ query, setQuery, runAi, notice, saved, save }: { query: string; setQuery: (value: string) => void; runAi: (value?: string) => void; notice: string; saved: string[]; save: (name: string) => void }) {
+  return <>
+    <section className="hero compact-hero">
+      <div className="hero-copy"><p className="eyebrow"><span></span> 你的本地 AI 题库</p><h1>说清需求，<em>好题和试卷</em><br />马上交到你手上。</h1><p className="hero-sub">AI 优先复用本地精品资源，结合班级学情完成找题、组卷、改编与布置。</p></div>
+      <div className="hero-ornament" aria-hidden="true"><div className="orbit orbit-a"></div><div className="floating-card card-one"><small>本周新增真题</small><strong>1,286</strong><span>持续自动入库</span></div><div className="floating-card card-two"><span className="spark">✦</span><strong>AI</strong><small>先找好题，再生成</small></div></div>
+    </section>
+    <section className="ask-panel" aria-label="AI 出题助手">
+      <div className="ask-heading"><span className="ai-dot">✦</span><div><b>今天想让 AI 帮你做什么？</b><small>一句话说需求，直接交付可用的题目或试卷</small></div></div>
+      <div className="prompt-box"><textarea value={query} onChange={(e) => setQuery(e.target.value)} placeholder="例如：给初二 3 班出一份一次函数的分层作业，40 分钟完成" aria-label="描述教学需求" /><button className="submit-prompt" onClick={() => runAi()} aria-label="开始生成">↑</button></div>
+      <div className="suggestions"><span>试试这样问</span>{prompts.map((prompt) => <button key={prompt} onClick={() => runAi(prompt)}>{prompt}</button>)}</div>
+      {notice && <div className="ai-notice" role="status"><span>✦</span>{notice}</div>}
+    </section>
+    <section className="discovery-section latest-section">
+      <div className="section-heading"><div><p className="eyebrow">资源正在持续变好</p><h2>今天新入库的本地好内容</h2></div><div className="live-update"><i></i> 34 分钟内更新 46 份资源</div></div>
+      <div className="latest-grid">{latest.map(([title, time, meta, mark], index) => <article className={`latest-card tone-${index}`} key={title}><div className="latest-mark">{mark}</div><div className="latest-main"><span className="fresh-badge">● {time}</span><h3>{title}</h3><p>{meta}</p></div><button aria-label={`收藏 ${title}`} onClick={() => save(title)} className={saved.includes(title) ? "saved" : ""}>{saved.includes(title) ? "♥" : "♡"}</button></article>)}</div>
+    </section>
+    <section className="ai-ways"><p className="eyebrow">不止搜索，更直接交付</p><div><article><span>01</span><b>智能找题</b><small>优先匹配本地高质量现成题</small></article><article><span>02</span><b>一键成卷</b><small>按时间、难度、学情自动组卷</small></article><article><span>03</span><b>按需改编</b><small>一句话调整题目与答案解析</small></article></div></section>
+    <Footer />
+  </>;
+}
+
+function Questions({ runAi }: { runAi: (value: string) => void }) {
+  return <section className="content-page"><div className="page-heading"><div><p className="eyebrow">28,426 道正在生长的本地好题</p><h1>题目</h1><p>不止能搜，更能让 AI 根据你的教学目标直接找准。</p></div><button className="primary-button" onClick={() => runAi("从本地题库中找适合初二 3 班的函数巩固题")}>✦ 让 AI 找题</button></div><div className="filter-row"><button className="filter-active">推荐给我</button><button>本地真题</button><button>名校精选</button><button>本周新增 1,286</button><span>按最近更新排序</span></div><div className="question-list">{questions.map(([title, source, time, tag]) => <article key={title}><span className="q-number">{String(questions.indexOf(questions.find(x => x[0] === title)!) + 1).padStart(2, "0")}</span><div><h3>{title}</h3><p>{source} · <b>{time} 更新</b></p></div><span className="q-tag">{tag}</span><button>加入试卷 +</button></article>)}</div><Footer /></section>;
+}
+
+function Papers({ save, saved }: { save: (name: string) => void; saved: string[] }) {
+  return <section className="content-page papers-page"><div className="page-heading"><div><p className="eyebrow">本地试卷持续入库与拆题</p><h1>试卷</h1><p>最新本地考试资源自动入库、校验、拆题，最快当天即可使用。</p></div><div className="paper-speed"><b>126</b><span>本周新增试卷</span><small>较上周 +32%</small></div></div><div className="update-ribbon"><span>✦</span><b>最新一份试卷 34 分钟前已可用</b><p>AI 正在持续追踪本地考试动态，将新资源转为可检索、可组卷的题目。</p></div><div className="paper-grid">{papers.map(([title, time, detail], index) => <article key={title}><div className={`paper-cover paper-${index}`}><span>数学</span><b>{index === 0 ? "厦门" : index === 1 ? "双十" : "湖里"}</b><i>2026</i></div><div className="paper-detail"><span className="fresh-badge">● {time} 入库</span><h3>{title}</h3><p>{detail}</p><div><button onClick={() => save(title)} className={saved.includes(title) ? "saved" : ""}>{saved.includes(title) ? "已收藏" : "收藏试卷"}</button><button className="open-paper">查看并组卷 →</button></div></div></article>)}</div><Footer /></section>;
+}
+
+function Resources() { return <section className="content-page"><div className="page-heading"><div><p className="eyebrow">你的教学资产会持续沉淀</p><h1>我的资源</h1><p>选过、改过、用过的好题，都在变成更懂你的专属题库。</p></div></div><div className="asset-overview"><article><b>2,846</b><span>已沉淀题目</span><small>本周新增 18 道</small></article><article><b>62</b><span>常用试卷</span><small>7 份正在被复用</small></article><article><b>127</b><span>已验证优质题</span><small>被学校老师复用 832 次</small></article></div><div className="resource-note"><span>✦</span><div><b>你的题库正在变得更懂你</b><p>AI 已根据你的教材、进度与常用难度，为本周备课准备了 3 份推荐资源。</p></div><button>查看推荐 →</button></div><Footer /></section> }
+
+function Footer() { return <footer>题库 AI · 让每一次教学准备，都成为更好的开始</footer>; }
