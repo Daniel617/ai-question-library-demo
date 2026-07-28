@@ -109,6 +109,14 @@ export default function Home() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  const newAgentTask = () => {
+    setAiRequest("");
+    setQuery("");
+    setGenerating(false);
+    setActiveNav("发现");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   const runAi = (request?: string) => {
     const value = (request || query).trim();
     if (!value) {
@@ -157,7 +165,7 @@ export default function Home() {
         </div>
       </nav>
 
-      {activeNav === "发现" && <Discovery query={query} setQuery={setQuery} runAi={runAi} aiRequest={aiRequest} generating={generating} notify={setToast} navigate={navigate} />}
+      {activeNav === "发现" && <Discovery query={query} setQuery={setQuery} runAi={runAi} aiRequest={aiRequest} generating={generating} notify={setToast} navigate={navigate} newTask={newAgentTask} />}
       {activeNav === "题目" && <Questions saved={saved} basket={basket} toggleSaved={toggleSaved} toggleBasket={toggleBasket} runAi={runAi} notify={setToast} />}
       {activeNav === "试卷" && <Papers saved={saved} toggleSaved={toggleSaved} runAi={runAi} notify={setToast} />}
       {activeNav === "我的资源" && <Resources saved={saved} basket={basket} navigate={navigate} notify={setToast} />}
@@ -167,10 +175,7 @@ export default function Home() {
   );
 }
 
-function Discovery({ query, setQuery, runAi, aiRequest, generating, notify, navigate }: { query: string; setQuery: (value: string) => void; runAi: (value?: string) => void; aiRequest: string; generating: boolean; notify: (message: string) => void; navigate: (target: Nav) => void }) {
-  const [variant, setVariant] = useState(0);
-  const [easy, setEasy] = useState(false);
-  const [assigned, setAssigned] = useState(false);
+function Discovery({ query, setQuery, runAi, aiRequest, generating, notify, navigate, newTask }: { query: string; setQuery: (value: string) => void; runAi: (value?: string) => void; aiRequest: string; generating: boolean; notify: (message: string) => void; navigate: (target: Nav) => void; newTask: () => void }) {
   const [contexts, setContexts] = useState(["初二 3 班", "北师大版", "近 4 周学情"]);
   const contextPresets = ["基础题优先", "40 分钟", "周四布置", "包含解析"];
   const quick = [
@@ -178,6 +183,10 @@ function Discovery({ query, setQuery, runAi, aiRequest, generating, notify, navi
     "用本周易错点生成 15 题巩固练习",
     "找近三年本地中考几何压轴题",
   ];
+
+  if (aiRequest && !generating) {
+    return <AgentWorkspace request={aiRequest} runAi={runAi} notify={notify} navigate={navigate} newTask={newTask} />;
+  }
 
   return <>
     <section className="ai-hero">
@@ -201,21 +210,6 @@ function Discovery({ query, setQuery, runAi, aiRequest, generating, notify, navi
 
     {generating && <section className="generation-state"><span>✦</span><div><b>AI 正在组装最合适的内容</b><p>先匹配本地精品题 → 校验知识点与难度 → 用班级薄弱点补足</p></div><i></i></section>}
 
-    {aiRequest && !generating && <section className="delivery-workbench">
-      <div className="delivery-head"><div><span className="success-pill">✓ 已完成 · 可直接使用</span><h2>初二 3 班 · 一次函数分层巩固</h2><p>15 题 · 40 分钟 · {easy ? "基础为主" : "中等难度"} · 预计平均得分 82</p></div><div className="delivery-actions"><button onClick={() => { setEasy(!easy); notify(easy ? "已恢复中等难度" : "已降低整体难度，替换 3 道题"); }}>{easy ? "恢复难度" : "降低难度"}</button><button onClick={() => { setVariant(variant + 1); notify("已替换第 6 题，结构和考点保持不变"); }}>换一道题</button><button className="primary" onClick={() => { setAssigned(true); notify("已布置给初二 3 班，学生端将在 18:00 开放"); }}>{assigned ? "已布置 ✓" : "直接布置"}</button></div></div>
-      <div className="delivery-body">
-        <PaperSheet compact variant={variant} easy={easy} />
-        <aside className="trust-panel">
-          <h3>为什么推荐这份</h3>
-          <div className="trust-item"><b>12 / 15</b><p>来自本地现成好题<small>近一年平均采用率 94%</small></p></div>
-          <div className="trust-item"><b>3</b><p>根据班级薄弱点改编<small>聚焦图象识别与实际应用</small></p></div>
-          <div className="trust-item"><b>100%</b><p>答案与解析已校验<small>2 道题含教研员点评</small></p></div>
-          <div className="level-map"><span>基础 40%</span><span>中等 47%</span><span>挑战 13%</span><i><b></b><b></b><b></b></i></div>
-          <button onClick={() => navigate("试卷")}>查看完整试卷内容 →</button>
-        </aside>
-      </div>
-    </section>}
-
     {!aiRequest && <section className="discovery-grid">
       <div className="section-head"><div><span>今天正在发生</span><h2>本地好内容，比你先一步到达</h2></div><button onClick={() => navigate("试卷")}>查看全部试卷 →</button></div>
       <div className="live-cards">
@@ -225,6 +219,62 @@ function Discovery({ query, setQuery, runAi, aiRequest, generating, notify, navi
     </section>}
     <Footer />
   </>;
+}
+
+const teacherRecords = [
+  { title: "本周易错点巩固", request: "用本周易错点生成 15 题巩固练习", result: "初二 3 班 · 一次函数分层巩固", time: "今天 10:32", detail: "换题 2 道 · 降低难度 1 次", used: "已布置" },
+  { title: "一次函数课后作业", request: "给初二 3 班出一次函数课后作业，30 分钟", result: "一次函数基础过关练习", time: "昨天 16:48", detail: "采用本地题 10 道 · 改编 2 道", used: "已使用" },
+  { title: "几何压轴题选练", request: "找近三年本地中考几何压轴题，难度适中", result: "中考几何压轴题精选", time: "周一 09:15", detail: "收藏 8 道 · 组成 1 份试卷", used: "已收藏" },
+  { title: "月考错题重练", request: "把月考错题按知识点重新生成一份练习", result: "初二 3 班月考错题重练", time: "上周五", detail: "学生完成率 96% · 平均分 +7", used: "已完成" },
+];
+
+function AgentWorkspace({ request, runAi, notify, navigate, newTask }: { request: string; runAi: (value?: string) => void; notify: (message: string) => void; navigate: (target: Nav) => void; newTask: () => void }) {
+  const [record, setRecord] = useState(0);
+  const [followup, setFollowup] = useState("");
+  const [variant, setVariant] = useState(0);
+  const [easy, setEasy] = useState(false);
+  const [assigned, setAssigned] = useState(false);
+  const [messages, setMessages] = useState([
+    { role: "teacher", text: request },
+    { role: "agent", text: "已优先匹配 12 道本地现成好题，并根据班级薄弱点改编 3 道。答案、解析和难度已经校验。" },
+  ]);
+
+  const current = record === 0 ? { ...teacherRecords[0], request, result: "初二 3 班 · 一次函数分层巩固" } : teacherRecords[record];
+
+  const askAgain = (preset?: string) => {
+    const value = (preset || followup).trim();
+    if (!value) { notify("可以继续说：再简单一点、换成本地期中题，或者生成一份新的练习"); return; }
+    setMessages([...messages, { role: "teacher", text: value }, { role: "agent", text: value.includes("简单") ? "已降低整体难度，替换 3 道题，并保留相同考点结构。" : value.includes("换") ? "已优先换成双十中学与厦门一中的近期考试题，来源信息已保留。" : "已根据新要求生成一个版本，右侧内容和推荐依据已同步更新。" }]);
+    if (value.includes("简单")) setEasy(true);
+    setVariant(variant + 1);
+    setFollowup("");
+    notify("题库 Agent 已完成新一轮调整");
+  };
+
+  return <section className="agent-layout">
+    <aside className="agent-sidebar">
+      <div className="agent-brand"><span>✦</span><div><b>题库 Agent</b><small><i></i> 正在为林老师工作</small></div></div>
+      <button className="new-agent-task" onClick={newTask}>＋ 新建任务</button>
+      <div className="record-title"><b>林老师的工作记录</b><span>自动沉淀</span></div>
+      <div className="record-list">{teacherRecords.map((item, index) => <button key={item.title} className={record === index ? "active" : ""} onClick={() => { setRecord(index); setMessages([{ role: "teacher", text: item.request }, { role: "agent", text: `已打开“${item.result}”，可以继续修改或生成新版本。` }]); }}><div><b>{item.title}</b><span>{item.time}</span></div><p>{item.detail}</p><small>{item.used}</small></button>)}</div>
+      <div className="teacher-memory"><span>Agent 记住了</span><div><b>常用班级</b><p>初二 3 班</p></div><div><b>偏好</b><p>基础题优先 · 30–40 分钟 · 含解析</p></div><button onClick={() => notify("已打开林老师的题库偏好，可继续补充")}>管理我的题库记忆 →</button></div>
+      <section className="agent-chat">
+        <div className="conversation-title"><div><span>✦</span><b>继续完善当前结果</b></div><small>上下文与修改记录自动保留</small></div>
+        <div className="messages">{messages.map((message, index) => <div key={`${message.role}-${index}`} className={`message ${message.role}`}><span>{message.role === "teacher" ? "林" : "✦"}</span><p>{message.text}</p></div>)}</div>
+        <div className="agent-events"><span>Agent 执行记录</span><div><i>✓</i><p>检索 28,426 道本地题目</p><small>0.4 秒</small></div><div><i>✓</i><p>匹配班级易错点与教学进度</p><small>0.8 秒</small></div><div><i>✓</i><p>校验答案、解析与难度结构</p><small>1.2 秒</small></div></div>
+        <div className="followup-presets"><button onClick={() => askAgain("再简单一点，基础题增加到 60%")}>再简单一点</button><button onClick={() => askAgain("换成本地学校最近的期中题")}>换成本地期中题</button><button onClick={() => askAgain("保持考点，再生成一份周末练习")}>生成周末练习</button></div>
+        <div className="followup-box"><textarea value={followup} onChange={(e) => setFollowup(e.target.value)} placeholder="继续提问，例如：第 6 题太难，换一道……" onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); askAgain(); } }} /><button onClick={() => askAgain()}>发送 ↑</button></div>
+      </section>
+    </aside>
+
+    <div className="agent-main">
+      <header className="agent-header"><div><span>当前任务</span><h1>{current.title}</h1><p>{current.request}</p></div><div><button onClick={() => notify("已保存当前版本到我的资源")}>保存版本</button><button onClick={() => navigate("我的资源")}>查看记录</button><button className="primary" onClick={() => { setAssigned(true); notify("已布置给初二 3 班，学生端将在 18:00 开放"); }}>{assigned ? "已布置 ✓" : "直接布置"}</button></div></header>
+      <section className="agent-output">
+        <div className="output-head"><div><span>✓ 已完成 · 第 {variant + 1} 版</span><h2>{current.result}</h2><p>15 题 · 40 分钟 · {easy ? "基础为主" : "中等难度"} · 预计平均得分 {easy ? 86 : 82}</p></div><div><button onClick={() => { setEasy(!easy); setVariant(variant + 1); notify(easy ? "已恢复中等难度" : "已降低难度并生成新版本"); }}>{easy ? "恢复难度" : "降低难度"}</button><button onClick={() => { setVariant(variant + 1); notify("已替换第 6 题并生成新版本"); }}>换一道题</button></div></div>
+        <div className="output-content"><PaperSheet compact variant={variant} easy={easy} /><aside className="agent-evidence"><h3>这份结果的依据</h3><div><b>12 / 15</b><p>来自本地现成好题<small>近一年采用率 94%</small></p></div><div><b>3</b><p>根据班级薄弱点改编<small>聚焦图象识别与实际应用</small></p></div><div><b>100%</b><p>答案与解析已校验<small>2 道题含教研点评</small></p></div><button onClick={() => navigate("试卷")}>查看完整试卷 →</button></aside></div>
+      </section>
+    </div>
+  </section>;
 }
 
 function Questions({ saved, basket, toggleSaved, toggleBasket, runAi, notify }: { saved: string[]; basket: string[]; toggleSaved: (id: string) => void; toggleBasket: (id: string) => void; runAi: (value: string) => void; notify: (message: string) => void }) {
