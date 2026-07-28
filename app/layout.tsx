@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "题库 AI｜好题，一句话开始",
-  description: "懂本地、懂教学、也懂班级的 AI 题库。",
+  title: "题库 Agent｜说需求，拿结果",
+  description: "懂本地、懂教学、懂班级，并持续从真实使用中学习的题库 Agent。",
   icons: {
     icon: "/favicon.svg",
     shortcut: "/favicon.svg",

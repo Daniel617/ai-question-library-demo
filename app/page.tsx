@@ -74,7 +74,9 @@ const paperBank = [
     name: "2026 厦门市初三第一次质量检测 · 数学",
     time: "今天 09:20 入库",
     status: "28 题已拆解 · 答案解析已校验",
-    meta: "120 分 · 120 分钟 · 难度 0.68",
+    score: 100,
+    duration: 120,
+    difficulty: "0.68",
   },
   {
     id: "p2",
@@ -82,7 +84,9 @@ const paperBank = [
     name: "双十中学 2026 春季期中 · 数学",
     time: "今天 08:46 更新",
     status: "21 题已拆解 · 3 题新增教研点评",
-    meta: "100 分 · 90 分钟 · 难度 0.72",
+    score: 100,
+    duration: 90,
+    difficulty: "0.72",
   },
   {
     id: "p3",
@@ -90,9 +94,61 @@ const paperBank = [
     name: "湖里区初二期末统测 · 数学",
     time: "昨天 18:12 入库",
     status: "26 题已拆解 · 覆盖 8 个核心考点",
-    meta: "100 分 · 100 分钟 · 难度 0.65",
+    score: 100,
+    duration: 100,
+    difficulty: "0.65",
   },
 ];
+
+const paperContents = {
+  p1: {
+    section: "一、选择题（每题 3 分，共 30 分）",
+    questions: [
+      { no: "1.", text: "若 x²−5x＋6＝0，则 x 的值为（　）", options: "A. 2　B. 3　C. 2 或 3　D. −2 或 −3", tag: "市质检原题" },
+      { no: "2.", text: "如图，在 △ABC 中，DE∥BC，AD∶DB＝2∶1，则 △ADE 与 △ABC 的面积比为（　）", options: "A. 2∶3　B. 4∶9　C. 1∶3　D. 2∶9", tag: "几何高频" },
+      { no: "3.", text: "抛物线 y＝x²−4x＋3 的顶点坐标是（　）", options: "A. (2,−1)　B. (−2,−1)　C. (2,1)　D. (−2,1)", tag: "核心考点" },
+    ],
+    fill: [
+      { no: "11.", text: "分解因式：x²−9＝________。", tag: "基础必会" },
+      { no: "12.", text: "圆锥底面半径为 3，母线长为 5，则其侧面积为________。", tag: "本地易错" },
+    ],
+    long: "某校开展科技节义卖活动，甲、乙两个班的销售额 y（元）与时间 x（小时）的函数图象如图所示。（1）求两班销售额对应的函数关系式；（2）说明第几小时后甲班销售额超过乙班。",
+  },
+  p2: {
+    section: "一、选择题（每题 3 分，共 30 分）",
+    questions: [
+      { no: "1.", text: "下列图形中，是轴对称图形但不是中心对称图形的是（　）", options: "A. 平行四边形　B. 等边三角形　C. 圆　D. 矩形", tag: "双十原题" },
+      { no: "2.", text: "若等腰三角形的两边长分别为 4 和 9，则它的周长为（　）", options: "A. 17　B. 22　C. 17 或 22　D. 13", tag: "校内高频" },
+      { no: "3.", text: "如图，AB＝AC，AD 平分 ∠BAC。证明 △ABD≌△ACD 的依据是（　）", options: "A. SSS　B. SAS　C. ASA　D. AAS", tag: "教研点评" },
+    ],
+    fill: [
+      { no: "11.", text: "点 P(2,−3) 关于 y 轴对称的点坐标为________。", tag: "基础巩固" },
+      { no: "12.", text: "若一个多边形的内角和为 900°，则它的边数是________。", tag: "期中必会" },
+    ],
+    long: "在 △ABC 中，AB＝AC，D 为 BC 中点，点 E、F 分别在 AB、AC 上，且 BE＝CF。证明：（1）△BDE≌△CDF；（2）DE＝DF。",
+  },
+  p3: {
+    section: "一、选择题（每题 3 分，共 30 分）",
+    questions: [
+      { no: "1.", text: "一次函数 y＝−2x＋4 的图象与 x 轴、y 轴分别交于 A、B 两点，则 △AOB 的面积为（　）", options: "A. 2　B. 4　C. 6　D. 8", tag: "湖里统测" },
+      { no: "2.", text: "若一次函数 y＝kx＋3 的图象经过点 (2,7)，则 k 的值为（　）", options: "A. 1　B. 2　C. 3　D. 4", tag: "基础题" },
+      { no: "3.", text: "点 P(a,b) 在函数 y＝−3x＋2 的图象上，则 3a＋b 的值为（　）", options: "A. −2　B. 0　C. 2　D. 4", tag: "区统测高频" },
+    ],
+    fill: [
+      { no: "11.", text: "将直线 y＝2x−1 向上平移 3 个单位后，所得直线的表达式为________。", tag: "基础巩固" },
+      { no: "12.", text: "已知一次函数图象经过点 A(−1,2) 和 B(3,−6)，则表达式为________。", tag: "班级易错" },
+    ],
+    long: "某校组织研学活动，甲、乙两家客运公司的包车费用 y（元）与人数 x（人）满足不同的一次函数关系。（1）分别求函数关系式；（2）当人数为 45 人时，选择哪家公司更合算？",
+  },
+};
+
+function taskTitleFromRequest(request: string) {
+  if (request.includes("一次函数") && request.includes("分层")) return "一次函数分层练习";
+  if (request.includes("一次函数")) return "一次函数练习";
+  if (request.includes("几何")) return "几何专题选练";
+  if (request.includes("错题") || request.includes("易错")) return "班级易错点巩固";
+  return "新建教学练习";
+}
 
 export default function Home() {
   const [activeNav, setActiveNav] = useState<Nav>("发现");
@@ -151,7 +207,7 @@ export default function Home() {
     <main className="app-shell">
       <nav className="topbar">
         <button className="brand" onClick={() => navigate("发现")} aria-label="回到发现页">
-          <span className="brand-mark">题</span><span>题库</span><i>AI</i>
+          <span className="brand-mark">题</span><span>题库 Agent</span>
         </button>
         <div className="nav-links">
           {(["发现", "题目", "试卷", "我的资源"] as Nav[]).map((item) => (
@@ -193,7 +249,7 @@ function Discovery({ query, setQuery, runAi, aiRequest, generating, notify, navi
       <div className="hero-copy">
         <span className="product-kicker"><i></i> 懂本地 · 懂班级 · 交付可用结果</span>
         <h1>说需求，<em>拿结果</em>。</h1>
-        <p>AI 从本地好题中优先匹配，找题、组卷、改编和布置一步完成。</p>
+        <p>题库 Agent 从本地好题中优先匹配，找题、组卷、改编和布置一步完成。</p>
       </div>
       <div className="proof-card">
         <div><b>8,642</b><span>近 7 天新增题目</span></div>
@@ -202,18 +258,18 @@ function Discovery({ query, setQuery, runAi, aiRequest, generating, notify, navi
       </div>
     </section>
 
-    <section className="composer" aria-label="AI 教学需求输入">
+    <section className="composer" aria-label="题库 Agent 教学需求输入">
       <div className="context-row"><span>已自动带入</span>{contexts.map((item) => <button className="context-chip" key={item} title={`移除${item}`} onClick={() => setContexts(contexts.filter((context) => context !== item))}>{item}<b>×</b></button>)}<button className="add-context" onClick={() => { const next = contextPresets.find((item) => !contexts.includes(item)); if (next) setContexts([...contexts, next]); else notify("常用条件都已添加，也可以直接在输入框里补充"); }}>＋ 添加条件</button></div>
       <div className="composer-input"><span>✦</span><textarea value={query} onChange={(e) => setQuery(e.target.value)} placeholder="例如：一次函数分层作业，40 分钟，基础题多一点" aria-label="输入教学需求" onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); runAi(); } }} /><button onClick={() => runAi()}>生成 <b>↑</b></button></div>
       <div className="quick-prompts"><small>不知怎么说？直接点：</small>{quick.map((item) => <button key={item} onClick={() => runAi(item)}>{item}</button>)}</div>
     </section>
 
-    {generating && <section className="generation-state"><span>✦</span><div><b>AI 正在组装最合适的内容</b><p>先匹配本地精品题 → 校验知识点与难度 → 用班级薄弱点补足</p></div><i></i></section>}
+    {generating && <section className="generation-state"><span>✦</span><div><b>题库 Agent 正在组装最合适的内容</b><p>先匹配本地精品题 → 校验知识点与难度 → 用班级薄弱点补足</p></div><i></i></section>}
 
     {!aiRequest && <section className="discovery-grid">
       <div className="section-head"><div><span>今天正在发生</span><h2>本地好内容，比你先一步到达</h2></div><button onClick={() => navigate("试卷")}>查看全部试卷 →</button></div>
       <div className="live-cards">
-        {paperBank.map((paper, index) => <article key={paper.id}><div className={`mini-cover cover-${index}`}>{paper.city}<small>2026 · 数学试卷</small></div><div><span className="live"><i></i>{paper.time}</span><h3>{paper.name}</h3><p>{paper.status}</p><div className="update-tags"><span>{paper.meta.split(" · ")[0]}</span><span>{index === 0 ? "今日 184 位老师查看" : index === 1 ? "校内采用 37 次" : "覆盖 8 个考点"}</span></div><button onClick={() => navigate("试卷")}>展开试卷内容</button></div></article>)}
+        {paperBank.map((paper, index) => <article key={paper.id}><div className={`mini-cover cover-${index}`}>{paper.city}<small>2026 · 数学试卷</small></div><div><span className="live"><i></i>{paper.time}</span><h3>{paper.name}</h3><p>{paper.status}</p><div className="update-tags"><span>{paper.score} 分 · {paper.duration} 分钟</span><span>{index === 0 ? "今日 184 位老师查看" : index === 1 ? "校内采用 37 次" : "覆盖 8 个考点"}</span></div><button onClick={() => navigate("试卷")}>展开试卷内容</button></div></article>)}
         <article><div className="mini-cover cover-3">新题<small>326 道 · 持续入库</small></div><div><span className="live"><i></i>今天累计更新 7 次</span><h3>近 7 天本地高质量新题</h3><p>覆盖函数、几何、数与式等 12 个核心专题，答案解析均已校验</p><div className="update-tags"><span>326 道题</span><span>23 道新近考试原题</span></div><button onClick={() => navigate("题目")}>查看新增题目</button></div></article>
       </div>
     </section>}
@@ -232,23 +288,45 @@ function AgentWorkspace({ request, runAi, notify, navigate, newTask }: { request
   const [record, setRecord] = useState(0);
   const [followup, setFollowup] = useState("");
   const [variant, setVariant] = useState(0);
-  const [easy, setEasy] = useState(false);
+  const [easy, setEasy] = useState(() => request.includes("基础") || request.includes("简单"));
+  const [localFirst, setLocalFirst] = useState(false);
   const [assigned, setAssigned] = useState(false);
+  const [learned, setLearned] = useState(request.includes("基础") ? "已识别：本次需要基础题更多" : "");
+  const [lastChange, setLastChange] = useState("首次生成：按需求完成题量、时长与难度配置");
   const [messages, setMessages] = useState([
     { role: "teacher", text: request },
     { role: "agent", text: "已优先匹配 12 道本地现成好题，并根据班级薄弱点改编 3 道。答案、解析和难度已经校验。" },
   ]);
 
-  const current = record === 0 ? { ...teacherRecords[0], request, result: "初二 3 班 · 一次函数分层巩固" } : teacherRecords[record];
+  const current = record === 0
+    ? { ...teacherRecords[0], title: taskTitleFromRequest(request), request, result: `初二 3 班 · ${taskTitleFromRequest(request)}` }
+    : teacherRecords[record];
 
   const askAgain = (preset?: string) => {
     const value = (preset || followup).trim();
     if (!value) { notify("可以继续说：再简单一点、换成本地期中题，或者生成一份新的练习"); return; }
-    setMessages([...messages, { role: "teacher", text: value }, { role: "agent", text: value.includes("简单") ? "已降低整体难度，替换 3 道题，并保留相同考点结构。" : value.includes("换") ? "已优先换成双十中学与厦门一中的近期考试题，来源信息已保留。" : "已根据新要求生成一个版本，右侧内容和推荐依据已同步更新。" }]);
-    if (value.includes("简单")) setEasy(true);
+    const isEasier = value.includes("简单") || value.includes("基础");
+    const isLocal = value.includes("本地") || value.includes("期中");
+    const reply = isEasier
+      ? "已把基础题提高到 60%，替换 3 道偏难题，预计平均分提升 4 分。"
+      : isLocal
+        ? "已优先换成双十中学与厦门一中的近期考试题，12 道题保留完整来源。"
+        : "已根据新要求生成一个版本，右侧内容、需求兑现和推荐依据已同步更新。";
+    setMessages([...messages, { role: "teacher", text: value }, { role: "agent", text: reply }]);
+    if (isEasier) {
+      setEasy(true);
+      setLearned("已学习：初二 3 班优先基础题，合适占比约 60%");
+      setLastChange("相比上一版：替换 3 题 · 基础题 +20% · 预计平均分 +4");
+    } else if (isLocal) {
+      setLocalFirst(true);
+      setLearned("已学习：优先使用本地学校近期考试题");
+      setLastChange("相比上一版：换入 4 道本地期中题 · 来源信息全部保留");
+    } else {
+      setLastChange("相比上一版：已按新要求更新内容与结构");
+    }
     setVariant(variant + 1);
     setFollowup("");
-    notify("题库 Agent 已完成新一轮调整");
+    notify("题库 Agent 已完成调整，并更新了本班用题偏好");
   };
 
   return <section className="agent-layout">
@@ -257,7 +335,7 @@ function AgentWorkspace({ request, runAi, notify, navigate, newTask }: { request
       <button className="new-agent-task" onClick={newTask}>＋ 新建任务</button>
       <div className="record-title"><b>林老师的工作记录</b><span>自动沉淀</span></div>
       <div className="record-list">{teacherRecords.map((item, index) => <button key={item.title} className={record === index ? "active" : ""} onClick={() => { setRecord(index); setMessages([{ role: "teacher", text: item.request }, { role: "agent", text: `已打开“${item.result}”，可以继续修改或生成新版本。` }]); }}><div><b>{item.title}</b><span>{item.time}</span></div><p>{item.detail}</p><small>{item.used}</small></button>)}</div>
-      <div className="teacher-memory"><span>Agent 记住了</span><div><b>常用班级</b><p>初二 3 班</p></div><div><b>偏好</b><p>基础题优先 · 30–40 分钟 · 含解析</p></div><button onClick={() => notify("已打开林老师的题库偏好，可继续补充")}>管理我的题库记忆 →</button></div>
+      <div className="teacher-memory"><span>Agent 记住了</span><div><b>常用班级</b><p>初二 3 班</p></div><div><b>偏好</b><p>基础题优先 · 30–40 分钟 · 含解析</p></div>{learned && <div className="memory-update"><b>本次新学习</b><p>{learned}</p></div>}<button onClick={() => notify("已打开林老师的题库偏好，可查看、修改或删除记忆")}>管理题库记忆 →</button></div>
       <section className="agent-chat">
         <div className="conversation-title"><div><span>✦</span><b>继续完善当前结果</b></div><small>上下文与修改记录自动保留</small></div>
         <div className="messages">{messages.map((message, index) => <div key={`${message.role}-${index}`} className={`message ${message.role}`}><span>{message.role === "teacher" ? "林" : "✦"}</span><p>{message.text}</p></div>)}</div>
@@ -268,10 +346,11 @@ function AgentWorkspace({ request, runAi, notify, navigate, newTask }: { request
     </aside>
 
     <div className="agent-main">
-      <header className="agent-header"><div><span>当前任务</span><h1>{current.title}</h1><p>{current.request}</p></div><div><button onClick={() => notify("已保存当前版本到我的资源")}>保存版本</button><button onClick={() => navigate("我的资源")}>查看记录</button><button className="primary" onClick={() => { setAssigned(true); notify("已布置给初二 3 班，学生端将在 18:00 开放"); }}>{assigned ? "已布置 ✓" : "直接布置"}</button></div></header>
+      <header className="agent-header"><div><span>当前任务</span><h1>{current.title}</h1><p>{current.request}</p></div><div><button onClick={() => notify("当前版本及全部修改记录已保存到“我的资源”")}>保存版本</button><button onClick={() => navigate("我的资源")}>查看记录</button><button className="primary" onClick={() => { setAssigned(true); setLearned("已学习：老师最终采用基础题 60%、本地题优先的版本"); notify("已布置给初二 3 班；本次采用结果已用于更新下次推荐"); }}>{assigned ? "已布置 ✓" : "直接布置"}</button></div></header>
       <section className="agent-output">
-        <div className="output-head"><div><span>✓ 已完成 · 第 {variant + 1} 版</span><h2>{current.result}</h2><p>15 题 · 40 分钟 · {easy ? "基础为主" : "中等难度"} · 预计平均得分 {easy ? 86 : 82}</p></div><div><button onClick={() => { setEasy(!easy); setVariant(variant + 1); notify(easy ? "已恢复中等难度" : "已降低难度并生成新版本"); }}>{easy ? "恢复难度" : "降低难度"}</button><button onClick={() => { setVariant(variant + 1); notify("已替换第 6 题并生成新版本"); }}>换一道题</button></div></div>
-        <div className="output-content"><PaperSheet compact variant={variant} easy={easy} /><aside className="agent-evidence"><h3>这份结果的依据</h3><div><b>12 / 15</b><p>来自本地现成好题<small>近一年采用率 94%</small></p></div><div><b>3</b><p>根据班级薄弱点改编<small>聚焦图象识别与实际应用</small></p></div><div><b>100%</b><p>答案与解析已校验<small>2 道题含教研点评</small></p></div><button onClick={() => navigate("试卷")}>查看完整试卷 →</button></aside></div>
+        <div className="output-head"><div><span>✓ 已完成 · 第 {variant + 1} 版</span><h2>{current.result}</h2><p>15 题 · 40 分钟 · {easy ? "基础题 60%" : "中等难度"} · 预计平均得分 {easy ? 86 : 82}</p></div><div><button onClick={() => { const nextEasy = !easy; setEasy(nextEasy); setVariant(variant + 1); setLastChange(nextEasy ? "相比上一版：基础题提高到 60% · 预计平均分 +4" : "相比上一版：恢复中等难度结构"); setLearned(nextEasy ? "已学习：本班更适合基础题占比约 60%" : "已记录：本次恢复中等难度"); notify(nextEasy ? "已降低难度并更新班级偏好" : "已恢复中等难度"); }}>{easy ? "恢复难度" : "降低难度"}</button><button onClick={() => { setVariant(variant + 1); setLastChange("相比上一版：第 6 题已替换 · 考点与分值不变"); notify("已替换第 6 题并保留原考点"); }}>换一道题</button></div></div>
+        <div className="requirement-strip"><div><span>需求兑现</span><b>{easy ? "基础题 60%" : "基础题 40%"}</b></div><div><span>本地现成题</span><b>{localFirst ? "15 / 15" : "12 / 15"}</b></div><div><span>班级易错点</span><b>覆盖 2 个</b></div><p>{lastChange}</p></div>
+        <div className="output-content"><PaperSheet compact variant={variant} easy={easy} title={current.result} /><aside className="agent-evidence"><h3>这份结果的依据</h3><div><b>{localFirst ? "15 / 15" : "12 / 15"}</b><p>来自本地现成好题<small>近一年采用率 94%</small></p></div><div><b>{localFirst ? "0" : "3"}</b><p>根据班级薄弱点改编<small>聚焦图象识别与实际应用</small></p></div><div><b>100%</b><p>答案与解析已校验<small>2 道题含教研点评</small></p></div>{learned && <div className="learned-evidence"><b>已学习</b><p>{learned}<small>下次推荐将自动优先</small></p></div>}<button onClick={() => navigate("试卷")}>查看完整试卷 →</button></aside></div>
       </section>
     </div>
   </section>;
@@ -291,19 +370,19 @@ function Questions({ saved, basket, toggleSaved, toggleBasket, runAi, notify }: 
   const visible = byCategory.filter((q) => (difficulty === "全部难度" || q.difficulty === difficulty) && (sourceFilter === "全部来源" || q.type === sourceFilter));
 
   return <section className="content-page">
-    <header className="page-header"><div><span className="page-kicker">每道题都可验证、可追溯、可改编</span><h1>题目</h1><p>先看内容与依据，再决定是否使用。</p></div><button className="primary-button" onClick={() => runAi("从本地题库找适合初二 3 班的一次函数巩固题")}>✦ 让 AI 替我找</button></header>
-    <div className="resource-finder"><button className={showCatalog ? "active" : ""} onClick={() => setShowCatalog(!showCatalog)}>☰ 教材目录</button><button onClick={() => setGrade(grade === "八年级下" ? "九年级上" : "八年级下")}>{grade}⌄</button><button className="wide" onClick={() => setShowCatalog(!showCatalog)}>{chapter}⌄</button><button onClick={() => setDifficulty(difficulty === "全部难度" ? "基础" : difficulty === "基础" ? "中等" : "全部难度")}>{difficulty}⌄</button><button onClick={() => setSourceFilter(sourceFilter === "全部来源" ? "本地真题" : sourceFilter === "本地真题" ? "名校精选" : "全部来源")}>{sourceFilter}⌄</button><button className="reset" onClick={() => { setGrade("八年级下"); setChapter("第四章 一次函数"); setDifficulty("全部难度"); setSourceFilter("全部来源"); setFilter("推荐给我"); }}>重置</button></div>
+    <header className="page-header"><div><span className="page-kicker">每道题都可验证、可追溯、可改编</span><h1>题目</h1><p>先看内容与依据，再决定是否使用。</p></div><button className="primary-button" onClick={() => runAi("从本地题库找适合初二 3 班的一次函数巩固题")}>✦ 让 Agent 替我找</button></header>
+    <div className="resource-finder"><button className={showCatalog ? "active" : ""} onClick={() => setShowCatalog(!showCatalog)}>☰ 教材目录</button><label><span>年级</span><select value={grade} onChange={(e) => setGrade(e.target.value)}><option>八年级下</option><option>九年级上</option></select></label><button className="wide" onClick={() => setShowCatalog(!showCatalog)}>{chapter}⌄</button><label><span>难度</span><select value={difficulty} onChange={(e) => setDifficulty(e.target.value)}><option>全部难度</option><option>基础</option><option>中等</option></select></label><label><span>来源</span><select value={sourceFilter} onChange={(e) => setSourceFilter(e.target.value)}><option>全部来源</option><option>本地真题</option><option>名校精选</option></select></label><button className="reset" onClick={() => { setGrade("八年级下"); setChapter("第四章 一次函数"); setDifficulty("全部难度"); setSourceFilter("全部来源"); setFilter("推荐给我"); }}>重置</button></div>
     {showCatalog && <div className="catalog-panel"><div><b>北师大版 · {grade}</b><span>选择教材章节，右侧题目会立即更新</span></div><div>{chapters.map((item) => <button key={item} className={chapter === item ? "active" : ""} onClick={() => { setChapter(item); setShowCatalog(false); notify(`已切换到${item}`); }}>{item}<small>{item.includes("一次函数") ? "326 题" : item.includes("三角形") ? "248 题" : "180+ 题"}</small></button>)}</div></div>}
     <div className="filter-bar">{filters.map((item) => <button key={item} className={filter === item ? "active" : ""} onClick={() => setFilter(item)}>{item}</button>)}<span>共 {visible.length} 道示例 · 最近更新优先</span></div>
     <div className="question-layout">
-      <div className="question-cards">{visible.length === 0 && <div className="empty-result"><span>暂时没有同时满足这些条件的题目</span><p>可以放宽难度或来源，也可以让 AI 按当前条件生成。</p><button onClick={() => { setDifficulty("全部难度"); setSourceFilter("全部来源"); setFilter("推荐给我"); }}>清除筛选</button></div>}{visible.map((q) => <article className={opened === q.id ? "open" : ""} key={q.id}>
+      <div className="question-cards">{visible.length === 0 && <div className="empty-result"><span>暂时没有同时满足这些条件的题目</span><p>可以放宽难度或来源，也可以让 Agent 按当前条件生成。</p><button onClick={() => { setDifficulty("全部难度"); setSourceFilter("全部来源"); setFilter("推荐给我"); }}>清除筛选</button></div>}{visible.map((q) => <article className={opened === q.id ? "open" : ""} key={q.id}>
         <button className="question-main" onClick={() => setOpened(opened === q.id ? "" : q.id)}>
           <div className="q-top"><span>{q.type}</span><i>{q.difficulty}</i><small>{q.updated}</small></div><h3>{q.stem}</h3><div className="options-row">{q.options.map((option) => <span key={option}>{option}</span>)}</div><div className="source-row"><span>来源</span><div><b>{q.source}</b><small>{q.sourceDetail} · {q.usage}</small></div><i>{q.tag}</i></div>
         </button>
         {opened === q.id && <div className="answer-panel"><span>答案 {q.answer}</span><p>{q.analysis}</p></div>}
-        <div className="q-actions"><button className="adapt" onClick={() => runAi(`把“${q.title}”改编成适合初二 3 班的题目，考点不变，情境更新`)}>✦ AI 改编</button><button onClick={() => setOpened(opened === q.id ? "" : q.id)}>{opened === q.id ? "收起解析" : "查看解析"}</button><button onClick={() => { notify("已找到 3 道同考点、不同情境的题目"); setOpened(q.id); }}>找相似题</button><button onClick={() => toggleSaved(q.id)}>{saved.includes(q.id) ? "已收藏 ✓" : "收藏"}</button><button className="add" onClick={() => toggleBasket(q.id)}>{basket.includes(q.id) ? "已加入试卷 ✓" : "加入试卷 +"}</button></div>
+        <div className="q-actions"><button className="adapt" onClick={() => runAi(`把“${q.title}”改编成适合初二 3 班的题目，考点不变，情境更新`)}>✦ Agent 改编</button><button onClick={() => setOpened(opened === q.id ? "" : q.id)}>{opened === q.id ? "收起解析" : "查看解析"}</button><button onClick={() => { notify("已找到 3 道同考点、不同情境的题目"); setOpened(q.id); }}>找相似题</button><button onClick={() => toggleSaved(q.id)}>{saved.includes(q.id) ? "已收藏 ✓" : "收藏"}</button><button className="add" onClick={() => toggleBasket(q.id)}>{basket.includes(q.id) ? "已加入试卷 ✓" : "加入试卷 +"}</button></div>
       </article>)}</div>
-      <aside className="question-ai"><span>✦ AI 选题观察</span><h3>这组题为什么适合你</h3><p>初二 3 班最近在“一次函数图象识别”上的错误率为 38%，高于同年级 11 个百分点。</p><div><b>建议</b><span>先用 q1 检查概念，再用 q3 迁移到实际情境。</span></div><button onClick={() => runAi("用这组题生成一份 20 分钟的随堂练习")}>用这组题生成练习 →</button></aside>
+      <aside className="question-ai"><span>✦ Agent 选题观察</span><h3>这组题为什么适合你</h3><p>初二 3 班最近在“一次函数图象识别”上的错误率为 38%，高于同年级 11 个百分点。</p><div><b>建议</b><span>先做第 1 题检查概念，再用第 3 题迁移到实际情境。</span></div><button onClick={() => runAi("用这组题生成一份 20 分钟的随堂练习")}>用这组题生成练习 →</button></aside>
     </div><Footer />
   </section>;
 }
@@ -317,37 +396,64 @@ function Papers({ saved, toggleSaved, runAi, notify }: { saved: string[]; toggle
     <div className="paper-workspace">
       <aside className="paper-list"><div className="paper-list-head"><b>最新试卷</b><span><i></i> 34 分钟前更新</span></div>{paperBank.map((item, index) => <button key={item.id} className={selected === index ? "active" : ""} onClick={() => { setSelected(index); setCopyMade(false); }}><span className={`paper-thumb thumb-${index}`}>{item.city}</span><div><b>{item.name}</b><small>{item.time}</small><p>{item.status}</p></div></button>)}</aside>
       <div className="paper-detail-view">
-        <div className="paper-toolbar"><div><span>已完成质量校验</span><b>{paper.name}</b><small>{paper.meta}</small></div><div><button onClick={() => toggleSaved(paper.id)}>{saved.includes(paper.id) ? "已收藏 ✓" : "收藏"}</button><button onClick={() => notify("已打开打印预览：A4 双面，含答题区")}>打印预览</button><button onClick={() => runAi(`按初二 3 班学情改编《${paper.name}》`)}>✦ AI 改编</button><button className="primary" onClick={() => { setCopyMade(true); notify("已创建可编辑副本，可自由增删和换题"); }}>{copyMade ? "已创建副本 ✓" : "创建可编辑副本"}</button></div></div>
-        <PaperSheet title={paper.name} />
+        <div className="paper-toolbar"><div><span>已完成质量校验</span><b>{paper.name}</b><small>{paper.score} 分 · {paper.duration} 分钟 · 难度 {paper.difficulty}</small></div><div><button onClick={() => toggleSaved(paper.id)}>{saved.includes(paper.id) ? "已收藏 ✓" : "收藏"}</button><button onClick={() => notify("已打开打印预览：A4 双面，含答题区")}>打印预览</button><button onClick={() => runAi(`按初二 3 班学情改编《${paper.name}》`)}>✦ Agent 改编</button><button className="primary" onClick={() => { setCopyMade(true); notify("已创建可编辑副本，可自由增删和换题"); }}>{copyMade ? "已创建副本 ✓" : "创建可编辑副本"}</button></div></div>
+        <PaperSheet title={paper.name} paperId={paper.id as keyof typeof paperContents} score={paper.score} duration={paper.duration} />
       </div>
     </div><Footer />
   </section>;
 }
 
-function PaperSheet({ compact = false, title = "初二 3 班 · 一次函数分层巩固", variant = 0, easy = false }: { compact?: boolean; title?: string; variant?: number; easy?: boolean }) {
+function PaperSheet({ compact = false, title = "初二 3 班 · 一次函数分层巩固", variant = 0, easy = false, paperId = "p3", score = 100, duration }: { compact?: boolean; title?: string; variant?: number; easy?: boolean; paperId?: keyof typeof paperContents; score?: number; duration?: number }) {
+  const content = paperContents[paperId];
+  const displayDuration = duration ?? (compact ? 40 : 100);
   return <div className={`paper-sheet ${compact ? "compact" : ""}`}>
-    <div className="sheet-title"><span>题库 AI 智能组卷</span><h2>{title}</h2><p>满分：100 分　考试时间：{compact ? "40" : "120"} 分钟　姓名：__________　班级：__________</p></div>
-    <section><h3>一、选择题（每题 3 分，共 30 分）</h3>
-      <div className="sheet-question"><b>1.</b><p>一次函数 y＝−2x＋4 的图象与 x 轴、y 轴分别交于 A、B 两点，则 △AOB 的面积为（　）<span>A. 2　　B. 4　　C. 6　　D. 8</span></p><i>本地真题</i></div>
-      <div className="sheet-question"><b>2.</b><p>{variant % 2 === 0 ? "若一次函数 y＝kx＋3 的图象经过点 (2,7)，则 k 的值为（　）" : "若直线 y＝kx−1 经过点 (3,5)，则 k 的值为（　）"}<span>A. 1　　B. 2　　C. 3　　D. 4</span></p><i>{easy ? "基础题" : "高频考点"}</i></div>
-      <div className="sheet-question"><b>3.</b><p>点 P(a,b) 在函数 y＝−3x＋2 的图象上，则 3a＋b 的值为（　）<span>A. −2　　B. 0　　C. 2　　D. 4</span></p><i>名校精选</i></div>
+    <div className="sheet-title"><span>题库 Agent 智能组卷</span><h2>{title}</h2><p>满分：{score} 分　考试时间：{displayDuration} 分钟　姓名：__________　班级：__________</p></div>
+    <section><h3>{content.section}</h3>
+      {content.questions.map((question, index) => <div className="sheet-question" key={question.no}><b>{question.no}</b><p>{index === 1 && variant % 2 === 1 ? "若直线 y＝kx−1 经过点 (3,5)，则 k 的值为（　）" : question.text}<span>{question.options}</span></p><i>{index === 1 && easy ? "基础题" : question.tag}</i></div>)}
     </section>
-    <section><h3>二、填空题（每题 4 分，共 24 分）</h3><div className="sheet-question"><b>11.</b><p>将直线 y＝2x−1 向上平移 3 个单位后，所得直线的表达式为 ________。</p><i>基础巩固</i></div><div className="sheet-question"><b>12.</b><p>已知一次函数图象经过点 A(−1,2) 和 B(3,−6)，则该函数的表达式为 ________。</p><i>班级易错</i></div></section>
-    {!compact && <section><h3>三、解答题（共 46 分）</h3><div className="sheet-question long"><b>17.</b><p>某校计划组织学生前往科技馆，甲、乙两家客运公司给出的包车费用 y（元）与人数 x（人）的关系如下图所示。<br/>（1）分别求两家公司的费用 y 与人数 x 的函数关系式；<br/>（2）当人数为 45 人时，选择哪家公司更合算？请说明理由。</p><i>实际应用</i></div></section>}
+    <section><h3>二、填空题（每题 4 分，共 24 分）</h3>{content.fill.map((question) => <div className="sheet-question" key={question.no}><b>{question.no}</b><p>{question.text}</p><i>{question.tag}</i></div>)}</section>
+    {!compact && <section><h3>三、解答题（共 46 分）</h3><div className="sheet-question long"><b>17.</b><p>{content.long}</p><i>综合应用</i></div></section>}
     <footer><span>题目来源可追溯 · 答案解析已校验</span><b>第 1 页 / 共 {compact ? 2 : 6} 页</b></footer>
   </div>;
 }
 
+const resourceHistory = {
+  最近使用: [
+    { type: "已布置", title: "初二 3 班 · 一次函数分层练习", meta: "今天 10:32 · 第 3 版", evidence: "基础题 60% · 学生预计完成率 92%", action: "查看记录" },
+    { type: "已完成", title: "月考错题重练", meta: "上周五 · 36 人完成", evidence: "平均分 +7 · 4 道题进入校本候选", action: "查看学情" },
+    { type: "已使用", title: "一次函数基础过关练习", meta: "昨天 16:48 · 第 2 版", evidence: "换题 2 道 · 最终采用 12 道", action: "继续修改" },
+  ],
+  我的收藏: [
+    { type: "本地真题", title: "一次函数图象与坐标轴围成的面积", meta: "厦门市 2026 初三一模 · 第 8 题", evidence: "近 30 天采用 184 次 · 答案解析已校验", action: "查看题目" },
+    { type: "校本优质题", title: "二次根式的化简与估值", meta: "厦门一中校本作业", evidence: "使用验证 12 次 · 学生正确率 72%", action: "查看题目" },
+  ],
+  我的试卷: [
+    { type: "当前编辑", title: "初二 3 班周四随堂练习", meta: "15 题 · 40 分钟 · 第 3 版", evidence: "本地题 12 道 · 改编题 3 道", action: "继续组卷" },
+    { type: "已布置", title: "一次函数分层巩固", meta: "今天 10:32 · 初二 3 班", evidence: "学生端 18:00 开放 · 已保存完整版本记录", action: "查看试卷" },
+  ],
+};
+
 function Resources({ saved, basket, navigate, notify }: { saved: string[]; basket: string[]; navigate: (target: Nav) => void; notify: (message: string) => void }) {
   const [tab, setTab] = useState("最近使用");
+  const [promoted, setPromoted] = useState(false);
+  const [repaired, setRepaired] = useState(false);
   const tabs = ["最近使用", "我的收藏", "我的试卷"];
+  const items = resourceHistory[tab as keyof typeof resourceHistory];
   return <section className="content-page">
     <header className="page-header"><div><span className="page-kicker">每次使用，都在形成更懂你的题库</span><h1>我的资源</h1><p>用过、改过、验证过的内容，在这里持续沉淀。</p></div></header>
-    <div className="asset-cards"><article><span>已沉淀题目</span><b>2,846</b><small>本周新增 18 道</small></article><article><span>已验证优质题</span><b>127</b><small>被校内复用 832 次</small></article><article><span>当前试卷</span><b>{basket.length}</b><small>道题等待完成组卷</small></article></div>
+    <div className="asset-cards"><article><span>个人题库</span><b>2,846</b><small>本周新增 18 道 · 全部可追溯</small></article><article><span>晋级校本优质题</span><b>{promoted ? 128 : 127}</b><small>被校内复用 832 次</small></article><article><span>当前试卷</span><b>{basket.length}</b><small>道题等待完成组卷</small></article></div>
     <div className="resource-tabs">{tabs.map((item) => <button key={item} className={tab === item ? "active" : ""} onClick={() => setTab(item)}>{item}{item === "我的收藏" && ` ${saved.length}`}</button>)}</div>
-    <div className="resource-content-card"><div><span>✦ AI 本周建议</span><h3>{tab === "我的试卷" ? "把当前选题补成一份完整试卷" : "函数专题需要再补一次迁移练习"}</h3><p>{tab === "我的收藏" ? `你已收藏 ${saved.length} 份资源，AI 可以按本周进度重新排序。` : "结合教学进度和最近作答，建议周四安排 20 分钟随堂练习。"}</p></div><button onClick={() => { if (tab === "我的试卷") navigate("试卷"); else { navigate("发现"); notify("已带入班级和进度，告诉 AI 题量即可"); } }}>{tab === "我的试卷" ? "继续组卷 →" : "让 AI 准备 →"}</button></div>
+    <div className="resource-list">{items.map((item, index) => <article key={item.title}><div className="resource-icon">{index + 1}</div><div><span>{item.type}</span><h3>{item.title}</h3><p>{item.meta}</p><small>{item.evidence}</small></div><button onClick={() => { if (item.action.includes("组卷") || item.action.includes("试卷")) navigate("试卷"); else if (item.action.includes("题目")) navigate("题目"); else notify(`已打开“${item.title}”的完整使用与修改记录`); }}>{item.action} →</button></article>)}</div>
+    <div className="resource-content-card"><div><span>✦ Agent 本周建议</span><h3>{tab === "我的试卷" ? "把当前选题补成一份完整试卷" : "函数专题需要再补一次迁移练习"}</h3><p>{tab === "我的收藏" ? `你已收藏 ${saved.length} 份资源，Agent 可以按本周进度重新排序。` : "结合教学进度和最近作答，建议周四安排 20 分钟随堂练习。"}</p></div><button onClick={() => { if (tab === "我的试卷") navigate("试卷"); else { navigate("发现"); notify("已带入班级和进度，告诉 Agent 题量即可"); } }}>{tab === "我的试卷" ? "继续组卷 →" : "让 Agent 准备 →"}</button></div>
+    <section className="asset-growth">
+      <div className="growth-head"><div><span>资产如何持续变好</span><h2>使用验证后，优质内容逐级沉淀</h2></div><small>每一次采用、换题和纠错都会进入质量判断</small></div>
+      <div className="growth-grid">
+        <article className="promotion-flow"><div><span>个人资源</span><b>二次根式估值题</b><small>林老师使用 4 次</small></div><i>→</i><div><span>校本候选</span><b>8 位老师复用</b><small>正确率与区分度稳定</small></div><i>→</i><div className={promoted ? "done" : ""}><span>{promoted ? "已晋级" : "待确认"}</span><b>校本优质题</b><small>进入全校搜索与推荐</small></div><button onClick={() => { setPromoted(true); notify("已晋级为校本优质题，后续将根据真实使用持续复核"); }}>{promoted ? "已晋级 ✓" : "确认晋级"}</button></article>
+        <article className="quality-card"><span>质量治理</span><h3>1 道题需要你确认</h3><p>学生反馈第 12 题条件表述可能产生歧义，Agent 已定位到原始试卷与两次修改记录。</p><div><b>{repaired ? "✓ 已纠正并保留旧版本" : "待处理 · 不再进入自动推荐"}</b><button onClick={() => { setRepaired(true); notify("已纠正题目并保留旧版本，推荐质量分已重新计算"); }}>{repaired ? "查看新版本" : "查看并纠正"}</button></div></article>
+      </div>
+    </section>
     <Footer />
   </section>;
 }
 
-function Footer() { return <footer className="site-footer">题库 AI · 好题有来源，推荐有依据，结果可直接使用</footer>; }
+function Footer() { return <footer className="site-footer">题库 Agent · 好题有来源，推荐有依据，结果可直接使用</footer>; }
