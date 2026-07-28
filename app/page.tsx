@@ -14,6 +14,8 @@ const questionBank = [
     answer: "B",
     analysis: "令 y＝0，得 A(2,0)；令 x＝0，得 B(0,4)。因此 S△AOB＝1/2×2×4＝4。",
     source: "2026 厦门市初三一模",
+    sourceDetail: "原卷第 8 题 · 厦门双十中学初三年级",
+    usage: "近 30 天被采用 184 次",
     updated: "今天 09:20",
     tag: "本地高频",
     difficulty: "中等",
@@ -27,6 +29,8 @@ const questionBank = [
     answer: "B",
     analysis: "由 AB＝AC、∠BAD＝∠CAE，再补充 AD＝AE，可依据 SAS 判定两三角形全等。",
     source: "双十中学 2026 春季期中",
+    sourceDetail: "原卷第 12 题 · 八年级数学期中考试",
+    usage: "校内 37 位老师采用",
     updated: "今天 08:46",
     tag: "推荐给初二 3 班",
     difficulty: "中等",
@@ -40,6 +44,8 @@ const questionBank = [
     answer: "C",
     analysis: "将 y＝6 代入 y＝24/x，得 6＝24/x，因此 x＝4。该题针对班级‘由函数值反求自变量’易错点改编。",
     source: "基于湖里区统测题改编",
+    sourceDetail: "母题：湖里区 2025 初二期末统测第 15 题",
+    usage: "针对初二 3 班学情生成",
     updated: "刚刚生成",
     tag: "班级薄弱点",
     difficulty: "基础",
@@ -53,6 +59,8 @@ const questionBank = [
     answer: "B",
     analysis: "因为 4＜√18＜5，所以 5＜√18＋1＜6。",
     source: "校本资源 · 使用验证 12 次",
+    sourceDetail: "厦门一中校本作业 · 二次根式专题",
+    usage: "学生作答正确率 72%",
     updated: "昨天 18:12",
     tag: "高采用率",
     difficulty: "基础",
@@ -222,19 +230,28 @@ function Discovery({ query, setQuery, runAi, aiRequest, generating, notify, navi
 function Questions({ saved, basket, toggleSaved, toggleBasket, runAi, notify }: { saved: string[]; basket: string[]; toggleSaved: (id: string) => void; toggleBasket: (id: string) => void; runAi: (value: string) => void; notify: (message: string) => void }) {
   const [filter, setFilter] = useState("推荐给我");
   const [opened, setOpened] = useState("q1");
+  const [showCatalog, setShowCatalog] = useState(false);
+  const [chapter, setChapter] = useState("第四章 一次函数");
+  const [grade, setGrade] = useState("八年级下");
+  const [difficulty, setDifficulty] = useState("全部难度");
+  const [sourceFilter, setSourceFilter] = useState("全部来源");
   const filters = ["推荐给我", "本地真题", "名校精选", "本周新增"];
-  const visible = filter === "推荐给我" ? questionBank : questionBank.filter((q) => q.type === filter || (filter === "本周新增" && q.type === "本周新增"));
+  const chapters = ["第一章 三角形的证明", "第二章 一元一次不等式", "第三章 图形的平移与旋转", "第四章 一次函数", "第五章 二元一次方程组", "第六章 平行四边形"];
+  const byCategory = filter === "推荐给我" ? questionBank : questionBank.filter((q) => q.type === filter || (filter === "本周新增" && q.type === "本周新增"));
+  const visible = byCategory.filter((q) => (difficulty === "全部难度" || q.difficulty === difficulty) && (sourceFilter === "全部来源" || q.type === sourceFilter));
 
   return <section className="content-page">
     <header className="page-header"><div><span className="page-kicker">每道题都可验证、可追溯、可改编</span><h1>题目</h1><p>先看内容与依据，再决定是否使用。</p></div><button className="primary-button" onClick={() => runAi("从本地题库找适合初二 3 班的一次函数巩固题")}>✦ 让 AI 替我找</button></header>
+    <div className="resource-finder"><button className={showCatalog ? "active" : ""} onClick={() => setShowCatalog(!showCatalog)}>☰ 教材目录</button><button onClick={() => setGrade(grade === "八年级下" ? "九年级上" : "八年级下")}>{grade}⌄</button><button className="wide" onClick={() => setShowCatalog(!showCatalog)}>{chapter}⌄</button><button onClick={() => setDifficulty(difficulty === "全部难度" ? "基础" : difficulty === "基础" ? "中等" : "全部难度")}>{difficulty}⌄</button><button onClick={() => setSourceFilter(sourceFilter === "全部来源" ? "本地真题" : sourceFilter === "本地真题" ? "名校精选" : "全部来源")}>{sourceFilter}⌄</button><button className="reset" onClick={() => { setGrade("八年级下"); setChapter("第四章 一次函数"); setDifficulty("全部难度"); setSourceFilter("全部来源"); setFilter("推荐给我"); }}>重置</button></div>
+    {showCatalog && <div className="catalog-panel"><div><b>北师大版 · {grade}</b><span>选择教材章节，右侧题目会立即更新</span></div><div>{chapters.map((item) => <button key={item} className={chapter === item ? "active" : ""} onClick={() => { setChapter(item); setShowCatalog(false); notify(`已切换到${item}`); }}>{item}<small>{item.includes("一次函数") ? "326 题" : item.includes("三角形") ? "248 题" : "180+ 题"}</small></button>)}</div></div>}
     <div className="filter-bar">{filters.map((item) => <button key={item} className={filter === item ? "active" : ""} onClick={() => setFilter(item)}>{item}</button>)}<span>共 {visible.length} 道示例 · 最近更新优先</span></div>
     <div className="question-layout">
-      <div className="question-cards">{visible.map((q) => <article className={opened === q.id ? "open" : ""} key={q.id}>
+      <div className="question-cards">{visible.length === 0 && <div className="empty-result"><span>暂时没有同时满足这些条件的题目</span><p>可以放宽难度或来源，也可以让 AI 按当前条件生成。</p><button onClick={() => { setDifficulty("全部难度"); setSourceFilter("全部来源"); setFilter("推荐给我"); }}>清除筛选</button></div>}{visible.map((q) => <article className={opened === q.id ? "open" : ""} key={q.id}>
         <button className="question-main" onClick={() => setOpened(opened === q.id ? "" : q.id)}>
-          <div className="q-top"><span>{q.type}</span><i>{q.difficulty}</i><small>{q.updated}</small></div><h3>{q.stem}</h3><div className="options-row">{q.options.map((option) => <span key={option}>{option}</span>)}</div><p>{q.source} · <b>{q.tag}</b></p>
+          <div className="q-top"><span>{q.type}</span><i>{q.difficulty}</i><small>{q.updated}</small></div><h3>{q.stem}</h3><div className="options-row">{q.options.map((option) => <span key={option}>{option}</span>)}</div><div className="source-row"><span>来源</span><div><b>{q.source}</b><small>{q.sourceDetail} · {q.usage}</small></div><i>{q.tag}</i></div>
         </button>
         {opened === q.id && <div className="answer-panel"><span>答案 {q.answer}</span><p>{q.analysis}</p></div>}
-        <div className="q-actions"><button onClick={() => setOpened(opened === q.id ? "" : q.id)}>{opened === q.id ? "收起解析" : "查看解析"}</button><button onClick={() => { notify("已找到 3 道同考点、不同情境的题目"); setOpened(q.id); }}>找相似题</button><button onClick={() => toggleSaved(q.id)}>{saved.includes(q.id) ? "已收藏 ✓" : "收藏"}</button><button className="add" onClick={() => toggleBasket(q.id)}>{basket.includes(q.id) ? "已加入试卷 ✓" : "加入试卷 +"}</button></div>
+        <div className="q-actions"><button className="adapt" onClick={() => runAi(`把“${q.title}”改编成适合初二 3 班的题目，考点不变，情境更新`)}>✦ AI 改编</button><button onClick={() => setOpened(opened === q.id ? "" : q.id)}>{opened === q.id ? "收起解析" : "查看解析"}</button><button onClick={() => { notify("已找到 3 道同考点、不同情境的题目"); setOpened(q.id); }}>找相似题</button><button onClick={() => toggleSaved(q.id)}>{saved.includes(q.id) ? "已收藏 ✓" : "收藏"}</button><button className="add" onClick={() => toggleBasket(q.id)}>{basket.includes(q.id) ? "已加入试卷 ✓" : "加入试卷 +"}</button></div>
       </article>)}</div>
       <aside className="question-ai"><span>✦ AI 选题观察</span><h3>这组题为什么适合你</h3><p>初二 3 班最近在“一次函数图象识别”上的错误率为 38%，高于同年级 11 个百分点。</p><div><b>建议</b><span>先用 q1 检查概念，再用 q3 迁移到实际情境。</span></div><button onClick={() => runAi("用这组题生成一份 20 分钟的随堂练习")}>用这组题生成练习 →</button></aside>
     </div><Footer />
