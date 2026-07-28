@@ -163,6 +163,8 @@ function Discovery({ query, setQuery, runAi, aiRequest, generating, notify, navi
   const [variant, setVariant] = useState(0);
   const [easy, setEasy] = useState(false);
   const [assigned, setAssigned] = useState(false);
+  const [contexts, setContexts] = useState(["初二 3 班", "北师大版", "近 4 周学情"]);
+  const contextPresets = ["基础题优先", "40 分钟", "周四布置", "包含解析"];
   const quick = [
     "给初二 3 班出一次函数分层作业，40 分钟",
     "用本周易错点生成 15 题巩固练习",
@@ -173,19 +175,19 @@ function Discovery({ query, setQuery, runAi, aiRequest, generating, notify, navi
     <section className="ai-hero">
       <div className="hero-copy">
         <span className="product-kicker"><i></i> 懂本地 · 懂班级 · 交付可用结果</span>
-        <h1>不用找题。<br />告诉 AI <em>你要教什么</em>。</h1>
-        <p>从 28,426 道本地好题中优先匹配，不够再改编；来源、难度和推荐依据全部可解释。</p>
+        <h1>说需求，<em>拿结果</em>。</h1>
+        <p>AI 从本地好题中优先匹配，找题、组卷、改编和布置一步完成。</p>
       </div>
       <div className="proof-card">
-        <div><b>18 秒</b><span>平均完成一份试卷</span></div>
-        <div><b>96.7%</b><span>老师首版直接采用</span></div>
-        <small><i></i> 今日资源已更新 7 次</small>
+        <div><b>8,642</b><span>近 7 天新增题目</span></div>
+        <div><b>126</b><span>近 7 天新增试卷</span></div>
+        <small><i></i> 最新一份 34 分钟前可用</small>
       </div>
     </section>
 
     <section className="composer" aria-label="AI 教学需求输入">
-      <div className="context-row"><span>已自动带入</span><button onClick={() => notify("班级已切换为：初二 3 班")}>初二 3 班⌄</button><button onClick={() => notify("教材已切换为：北师大版八年级下")}>北师大版⌄</button><button onClick={() => notify("AI 会结合近 4 周作答数据")}>近 4 周学情 ✓</button></div>
-      <div className="composer-input"><span>✦</span><textarea value={query} onChange={(e) => setQuery(e.target.value)} placeholder="例如：一次函数分层作业，40 分钟，基础题多一点" aria-label="输入教学需求" onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); runAi(); } }} /><button onClick={() => runAi()}>生成可用结果 <b>↑</b></button></div>
+      <div className="context-row"><span>已自动带入</span>{contexts.map((item) => <button className="context-chip" key={item} title={`移除${item}`} onClick={() => setContexts(contexts.filter((context) => context !== item))}>{item}<b>×</b></button>)}<button className="add-context" onClick={() => { const next = contextPresets.find((item) => !contexts.includes(item)); if (next) setContexts([...contexts, next]); else notify("常用条件都已添加，也可以直接在输入框里补充"); }}>＋ 添加条件</button></div>
+      <div className="composer-input"><span>✦</span><textarea value={query} onChange={(e) => setQuery(e.target.value)} placeholder="例如：一次函数分层作业，40 分钟，基础题多一点" aria-label="输入教学需求" onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); runAi(); } }} /><button onClick={() => runAi()}>生成 <b>↑</b></button></div>
       <div className="quick-prompts"><small>不知怎么说？直接点：</small>{quick.map((item) => <button key={item} onClick={() => runAi(item)}>{item}</button>)}</div>
     </section>
 
@@ -209,7 +211,8 @@ function Discovery({ query, setQuery, runAi, aiRequest, generating, notify, navi
     {!aiRequest && <section className="discovery-grid">
       <div className="section-head"><div><span>今天正在发生</span><h2>本地好内容，比你先一步到达</h2></div><button onClick={() => navigate("试卷")}>查看全部试卷 →</button></div>
       <div className="live-cards">
-        {paperBank.slice(0, 2).map((paper, index) => <article key={paper.id}><div className={`mini-cover cover-${index}`}>{paper.city}<small>2026 · 数学</small></div><div><span className="live"><i></i>{paper.time}</span><h3>{paper.name}</h3><p>{paper.status}</p><button onClick={() => navigate("试卷")}>展开试卷内容</button></div></article>)}
+        {paperBank.map((paper, index) => <article key={paper.id}><div className={`mini-cover cover-${index}`}>{paper.city}<small>2026 · 数学试卷</small></div><div><span className="live"><i></i>{paper.time}</span><h3>{paper.name}</h3><p>{paper.status}</p><div className="update-tags"><span>{paper.meta.split(" · ")[0]}</span><span>{index === 0 ? "今日 184 位老师查看" : index === 1 ? "校内采用 37 次" : "覆盖 8 个考点"}</span></div><button onClick={() => navigate("试卷")}>展开试卷内容</button></div></article>)}
+        <article><div className="mini-cover cover-3">新题<small>326 道 · 持续入库</small></div><div><span className="live"><i></i>今天累计更新 7 次</span><h3>近 7 天本地高质量新题</h3><p>覆盖函数、几何、数与式等 12 个核心专题，答案解析均已校验</p><div className="update-tags"><span>326 道题</span><span>23 道新近考试原题</span></div><button onClick={() => navigate("题目")}>查看新增题目</button></div></article>
       </div>
     </section>}
     <Footer />
